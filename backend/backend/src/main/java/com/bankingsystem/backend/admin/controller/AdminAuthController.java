@@ -20,6 +20,7 @@ public class AdminAuthController {
 
     @PostMapping("/login")
     public AdminLoginResponse login(@RequestBody AdminLoginRequest request) {
+        
         return adminService.login(request);
     }
 }
