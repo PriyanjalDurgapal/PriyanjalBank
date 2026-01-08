@@ -2,6 +2,8 @@ interface Props {
   label: string;
   name: string;
   options: string[];
+  value: string;
+  required?: boolean;
   onChange: (e: any) => void;
 }
 

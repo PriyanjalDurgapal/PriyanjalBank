@@ -58,11 +58,15 @@ public class Customer {
     @Column(nullable = false)
     private String password; 
 
+     @Column(nullable = false, length = 20)
+    private String role; // ADMIN
+
     private LocalDateTime createdAt;
 
     @PrePersist
     void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.status = "ACTIVE";
+        this.role = "EMPLOYEE";
     }
 }

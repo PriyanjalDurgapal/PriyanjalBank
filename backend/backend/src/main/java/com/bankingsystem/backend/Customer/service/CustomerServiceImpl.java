@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -71,5 +72,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private String generateRandomPassword() {
         return UUID.randomUUID().toString().substring(0, 8);
+    }
+    
+    @Override
+    public List<Customer> getallCustomers(){
+        return customerRepository.findAll();
     }
 }
