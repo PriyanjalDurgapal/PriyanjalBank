@@ -1,15 +1,25 @@
 package com.bankingsystem.backend.Customer.service;
 
+import java.time.LocalDateTime;
+
 import com.bankingsystem.backend.Customer.dto.CreateCustomerRequest;
 import com.bankingsystem.backend.Customer.entity.Customer;
 import com.bankingsystem.backend.Customer.repository.CustomerRepository;
 import com.bankingsystem.backend.common.util.EmailService;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.*;
 import java.util.List;
 import java.util.UUID;
+
+import com.bankingsystem.backend.Customer.dto.UpdateCustomerRequest;
+import com.bankingsystem.backend.Customer.entity.ArchivedCustomer;
+import com.bankingsystem.backend.Customer.repository.ArchivedCustomerRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-
+    private final ArchivedCustomerRepository archivedCustomerRepository; 
     @Override
     public Customer createCustomer(CreateCustomerRequest request, String role) {
 
@@ -78,4 +88,100 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> getallCustomers(){
         return customerRepository.findAll();
     }
+
+
+@Override
+public Customer updateCustomer(Long id, UpdateCustomerRequest request, String performedBy) {
+
+    Customer customer = customerRepository.findByIdAndDeletedFalse(id)
+            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+    customer.setFullName(request.getFullName());
+    customer.setGender(request.getGender());
+    customer.setStatus(request.getStatus());
+
+    customer.setUpdatedBy(performedBy);
+    customer.setUpdatedAt(LocalDateTime.now());
+
+    Customer saved = customerRepository.save(customer);
+
+    //  Email notification
+    try {
+        if (saved.getEmail() != null) {
+            emailService.sendMail(
+                    saved.getEmail(),
+                    "Profile Updated",
+                    "Dear " + saved.getFullName() +
+                    ",\n\nYour customer profile has been updated.\n\nRegards,\nBank Team"
+            );
+        }
+    } catch (Exception e) {
+       
+        System.err.println("Email sending failed for customer: " + saved.getId());
+        e.printStackTrace();
+    }
+
+    return saved;
+}
+
+@Override
+public Customer deleteCustomer(Long id, String performedBy) {
+
+    Customer customer = customerRepository.findByIdAndDeletedFalse(id)
+            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+    // 🗂 Archive before delete
+    ArchivedCustomer archive = ArchivedCustomer.builder()
+            .originalCustomerId(customer.getId())
+            .customerId(customer.getCustomerId())
+            .accountNumber(customer.getAccountNumber())
+            .fullName(customer.getFullName())
+            .gender(customer.getGender())
+            .dob(customer.getDob())
+            .mobile(customer.getMobile())
+            .email(customer.getEmail())
+            .address(customer.getAddress())
+            .status(customer.getStatus())
+            .deletedBy(performedBy)
+            .deletedAt(LocalDateTime.now())
+            .build();
+
+    archivedCustomerRepository.save(archive);
+
+    // 🧹 Soft delete
+    customer.setDeleted(true);
+    customer.setDeletedBy(performedBy);
+    customer.setDeletedAt(LocalDateTime.now());
+
+    Customer saved = customerRepository.save(customer);
+
+    // 📧 Email notification
+    try {
+        if (saved.getEmail() != null) {
+            emailService.sendMail(
+                    saved.getEmail(),
+                    "Account Deactivated",
+                    "Dear " + saved.getFullName() +
+                            ",\n\nYour account has been deactivated.\n\nRegards,\nBank Team"
+            );
+        }
+    } catch (Exception e) {
+        System.err.println("Email sending failed for customer: " + saved.getId());
+    }
+
+    return saved;
+}
+@Override
+public Page<Customer> searchCustomers(
+        String search,
+        String status,
+        int page,
+        int size
+) {
+    Pageable pageable = PageRequest.of(page, size);
+    return customerRepository.searchCustomers(search, status, pageable);
+}
+
+
+
 }

@@ -61,7 +61,17 @@ public class Customer {
      @Column(nullable = false, length = 20)
     private String role; // ADMIN
 
+     @Column(nullable = false)
+    private boolean deleted = false;
+
+    private String updatedBy;
+    private LocalDateTime updatedAt;
+
+    private String deletedBy;
+    private LocalDateTime deletedAt;
+
     private LocalDateTime createdAt;
+    
 
     @PrePersist
     void onCreate() {
@@ -69,4 +79,5 @@ public class Customer {
         this.status = "ACTIVE";
         this.role = "EMPLOYEE";
     }
+ 
 }

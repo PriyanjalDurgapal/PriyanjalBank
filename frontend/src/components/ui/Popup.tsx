@@ -1,3 +1,5 @@
+//src/components/ui/Popup.ts
+
 import { useEffect } from "react";
 
 type PopupProps = {
