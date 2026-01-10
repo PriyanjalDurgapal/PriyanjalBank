@@ -1,13 +1,16 @@
 package com.bankingsystem.backend.Customer.repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.bankingsystem.backend.Customer.dto.CustomerSuggestionResponse;
 import com.bankingsystem.backend.Customer.entity.Customer;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -35,5 +38,22 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             @Param("status") String status,
             Pageable pageable
     );
+@Query("""
+SELECT new com.bankingsystem.backend.Customer.dto.CustomerSuggestionResponse(
+    c.id, c.fullName, c.accountNumber
+)
+FROM Customer c
+WHERE c.deletedAt IS NULL
+AND (
+    c.fullName ILIKE %:query%
+    OR c.accountNumber ILIKE %:query%
+    OR c.mobile ILIKE %:query%
+)
+ORDER BY c.createdAt DESC
+""")
+List<CustomerSuggestionResponse> suggestCustomers(
+        @Param("query") String query,
+        Pageable pageable
+);
 
 }

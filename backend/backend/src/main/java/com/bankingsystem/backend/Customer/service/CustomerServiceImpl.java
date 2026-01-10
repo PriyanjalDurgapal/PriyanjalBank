@@ -3,13 +3,13 @@ package com.bankingsystem.backend.Customer.service;
 import java.time.LocalDateTime;
 
 import com.bankingsystem.backend.Customer.dto.CreateCustomerRequest;
+import com.bankingsystem.backend.Customer.dto.CustomerSuggestionResponse;
 import com.bankingsystem.backend.Customer.entity.Customer;
 import com.bankingsystem.backend.Customer.repository.CustomerRepository;
 import com.bankingsystem.backend.common.util.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -182,6 +182,12 @@ public Page<Customer> searchCustomers(
     return customerRepository.searchCustomers(search, status, pageable);
 }
 
+public List<CustomerSuggestionResponse> suggestCustomers(String query) {
+    return customerRepository.suggestCustomers(
+            query,
+            PageRequest.of(0, 5) 
+    );
+}
 
 
 }

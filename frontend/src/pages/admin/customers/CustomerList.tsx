@@ -4,13 +4,21 @@ import Popup from "../../../components/ui/Popup";
 import SearchFilterBar from "../../../components/ui/SearchFilterBar";
 import Pagination from "../../../components/ui/Pagination";
 import { fetchCustomers } from "../../../api/AddCustomer";
+import HighlightText from "../../../components/ui/HighlightText";
 
 interface Customer {
   id: number;
-  accountNumber: string;
+  customerId: string;
   fullName: string;
+  dob: string;
+  gender: string;
+  mobile: string;
+  email?: string;
+  address?: string;
+  accountNumber: string;
   status: string;
   createdByRole: string;
+  createdAt: string;
 }
 
 const CustomerList = () => {
@@ -43,21 +51,21 @@ const CustomerList = () => {
     }
   };
 
+  
   useEffect(() => {
     loadCustomers();
-  }, [page]);
+  }, [page, search, status]);
 
   return (
     <div className="overflow-x-auto">
       <h1 className="text-2xl font-bold mb-4">Customer List</h1>
 
-      {/* 🔍 Search + Filter */}
+      {/* Search + Filter */}
       <SearchFilterBar
         onSearch={(s, st) => {
           setSearch(s);
           setStatus(st);
-          setPage(0);
-          setTimeout(loadCustomers, 0);
+          setPage(0); // reset pagination on new search
         }}
       />
 
@@ -76,8 +84,14 @@ const CustomerList = () => {
         <tbody>
           {customers.map((cust) => (
             <tr key={cust.id} className="odd:bg-gray-900 even:bg-gray-800">
-              <td className="px-4 py-2 border">{cust.accountNumber}</td>
-              <td className="px-4 py-2 border">{cust.fullName}</td>
+              <td className="px-4 py-2 border">
+  <HighlightText text={cust.accountNumber} highlight={search} />
+</td>
+
+<td className="px-4 py-2 border">
+  <HighlightText text={cust.fullName} highlight={search} />
+</td>
+
               <td className="px-4 py-2 border">{cust.status}</td>
               <td className="px-4 py-2 border">{cust.createdByRole}</td>
               <td className="px-4 py-2 border text-center">
@@ -105,6 +119,33 @@ const CustomerList = () => {
           message={popup.message}
           type={popup.type}
           onClose={() => setPopup(null)}
+        />
+      )}
+
+      {selectedCustomer && (
+        <CustomerModal
+          customer={selectedCustomer}
+          onClose={() => setSelectedCustomer(null)}
+          onUpdated={() => {
+            loadCustomers();
+            setPopup({
+              message: "Customer updated successfully",
+              type: "success",
+            });
+          }}
+          onDeleted={() => {
+            loadCustomers();
+            setPopup({
+              message: "Customer deleted successfully",
+              type: "success",
+            });
+          }}
+          onError={(msg) =>
+            setPopup({
+              message: msg,
+              type: "error",
+            })
+          }
         />
       )}
     </div>

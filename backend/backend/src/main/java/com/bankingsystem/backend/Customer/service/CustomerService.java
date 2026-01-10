@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bankingsystem.backend.Customer.dto.CreateCustomerRequest;
 import com.bankingsystem.backend.Customer.dto.CustomerPageResponse;
+import com.bankingsystem.backend.Customer.dto.CustomerSuggestionResponse;
 import com.bankingsystem.backend.Customer.dto.UpdateCustomerRequest;
 import com.bankingsystem.backend.Customer.entity.Customer;
 import org.springframework.data.domain.Page;
@@ -21,4 +22,5 @@ public interface CustomerService {
         int page,
         int size
 );
+List<CustomerSuggestionResponse> suggestCustomers(String query);
 }

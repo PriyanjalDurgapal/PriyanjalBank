@@ -22,6 +22,12 @@ export const createCustomer=(data:CreateAddCoustmerRequest)=>{
         },
     });
 };
+export const fetchCustomerSuggestions = async (query: string) => {
+  const res = await api.get("/customers/suggestions", {
+    params: { query },
+  });
+  return res.data;
+};
 
 
 //here we get all users
