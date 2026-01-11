@@ -16,14 +16,14 @@ export interface UpdateCustomerRequest {
 
 export const createCustomer=(data:CreateAddCoustmerRequest)=>{
 
-    return api.post("/customers/add",data,{
+    return api.post("/staff-customers/add",data,{
         headers: {
             "X-ROLE":localStorage.getItem("role")|| "",
         },
     });
 };
 export const fetchCustomerSuggestions = async (query: string) => {
-  const res = await api.get("/customers/suggestions", {
+  const res = await api.get("/staff-customers/suggestions", {
     params: { query },
   });
   return res.data;
@@ -33,7 +33,7 @@ export const fetchCustomerSuggestions = async (query: string) => {
 //here we get all users
 export const allcustomer=()=>{
 
-    return api.get("/customers/all",{
+    return api.get("/staff-customers/all",{
         headers: {
             "X-ROLE":localStorage.getItem("role")|| "",
         },
@@ -42,7 +42,7 @@ export const allcustomer=()=>{
 
 //here we update users
 export const updateCustomer=(id:number,data:UpdateCustomerRequest)=>{
-    return api.patch(`/customers/${id}`,data,{
+    return api.patch(`/staff-customers/${id}`,data,{
         headers: {
             "X-ROLE":localStorage.getItem("role")|| "",
         },
@@ -52,7 +52,7 @@ export const updateCustomer=(id:number,data:UpdateCustomerRequest)=>{
 //delete cutomers
 
 export const deleteCustomer=(id:number)=>{
-    return api.delete(`/customers/${id}`);
+    return api.delete(`/staff-customers/${id}`);
 };
 
 export const fetchCustomers = (
@@ -61,7 +61,7 @@ export const fetchCustomers = (
   page = 0,
   size = 5
 ) => {
-  return api.get("/customers", {
+  return api.get("/staff-customers", {
     params: { search, status, page, size },
     headers: {
       "X-ROLE": localStorage.getItem("role") || "",

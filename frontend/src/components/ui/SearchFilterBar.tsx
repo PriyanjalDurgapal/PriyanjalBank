@@ -31,9 +31,11 @@ const SearchFilterBar = ({
       //  Fetch suggestions after 3 chars
       if (search.length && search.length >= 3) {
         fetchCustomerSuggestions(search).then((res) => {
-          setSuggestions(res.data);
-          setShowSuggestions(true);
-        });
+  const list = Array.isArray(res.data) ? res.data : [];
+  setSuggestions(list);
+  setShowSuggestions(list.length > 0);
+});
+
       } else {
         setShowSuggestions(false);
       }
@@ -55,7 +57,8 @@ const SearchFilterBar = ({
         />
 
         {/* 🔍 Suggestions Dropdown */}
-        {showSuggestions && suggestions.length > 0 && (
+        {showSuggestions && Array.isArray(suggestions) && suggestions.length > 0 && (
+
           <div className="absolute z-20 w-full bg-gray-900 border border-gray-700 rounded mt-1 max-h-60 overflow-y-auto">
             {suggestions.map((s) => (
               <div

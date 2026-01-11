@@ -21,6 +21,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByMobile(String mobile);
     boolean existsByEmail(String email);
     Optional<Customer> findByIdAndDeletedFalse(Long id);
+    Optional<Customer> findByCustomerId(String customerId);;
     @Query("""
     SELECT c FROM Customer c
     WHERE c.deletedAt IS NULL

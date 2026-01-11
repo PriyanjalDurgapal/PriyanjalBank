@@ -31,7 +31,7 @@ const SearchAutocomplete = ({ fetchSuggestions, onSelect, placeholder }: Props) 
       } finally {
         setLoading(false);
       }
-    }, 300); // 🔥 debounce
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [query]);

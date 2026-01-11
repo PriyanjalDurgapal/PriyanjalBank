@@ -7,12 +7,14 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import CustomerList from "./pages/admin/customers/CustomerList";
 import AddCustomer from "./pages/admin/customers/AddCustomer";
 import DashboardLayout from "./components/layout/DashboradLayout";
+import CustomerLogin from "./pages/customer/Customerlogin";
 
 function App() {
   return (
     <Routes>
       {/* PUBLIC */}
-      <Route path="/" element={<AdminLogin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/" element={<CustomerLogin />} />
 
       {/* ADMIN DASHBOARD */}
       <Route
