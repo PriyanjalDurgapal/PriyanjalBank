@@ -130,7 +130,7 @@ public Customer deleteCustomer(Long id, String performedBy) {
     Customer customer = customerRepository.findByIdAndDeletedFalse(id)
             .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-    // 🗂 Archive before delete
+    //  Archive before delete
     ArchivedCustomer archive = ArchivedCustomer.builder()
             .originalCustomerId(customer.getId())
             .customerId(customer.getCustomerId())
@@ -148,14 +148,14 @@ public Customer deleteCustomer(Long id, String performedBy) {
 
     archivedCustomerRepository.save(archive);
 
-    // 🧹 Soft delete
+    //  Soft delete
     customer.setDeleted(true);
     customer.setDeletedBy(performedBy);
     customer.setDeletedAt(LocalDateTime.now());
 
     Customer saved = customerRepository.save(customer);
 
-    // 📧 Email notification
+    //  Email notification
     try {
         if (saved.getEmail() != null) {
             emailService.sendMail(

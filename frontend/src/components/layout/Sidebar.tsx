@@ -96,11 +96,97 @@ const Sidebar = ({
             {/* TRANSACTIONS */}
             {role === "ADMIN" && (
               <SidebarItem
+                to="/admin/logs"
+                label="My logs"
+                active={isActive("/admin/transactions")}
+              />
+            )}
+            {role === "EMPLOYEE" && (
+              <SidebarItem
                 to="/admin/transactions"
                 label="Transactions"
                 active={isActive("/admin/transactions")}
               />
             )}
+            {role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/dashboard"
+    label="Dashboard"
+    active={isActive("/customer/dashboard")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/accounts"
+    label="My Accounts"
+    active={isActive("/customer/accounts")}
+  />
+)}
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/logs"
+    label="My Logs"
+    active={isActive("/customer/logs")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/transactions"
+    label="Transactions"
+    active={isActive("/customer/transactions")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/transfer"
+    label="Transfer Money"
+    active={isActive("/customer/transfer")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/cards"
+    label="My Cards"
+    active={isActive("/customer/cards")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/loans"
+    label="Loans"
+    active={isActive("/customer/loans")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/profile"
+    label="Profile"
+    active={isActive("/customer/profile")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/security"
+    label="Security"
+    active={isActive("/customer/security")}
+  />
+)}
+
+{role === "CUSTOMER" && (
+  <SidebarItem
+    to="/customer/support"
+    label="Support"
+    active={isActive("/customer/support")}
+  />
+)}
+
 
           </ul>
         </nav>

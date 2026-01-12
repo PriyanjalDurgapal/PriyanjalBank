@@ -40,4 +40,14 @@ public class EmailService {
         mailSender.send(message);
 
     }
+    public void sendOtp(String to, String otp) {
+
+    String body =
+            "Your OTP for password reset is: " + otp +
+            "\n\nThis OTP is valid for 10 minutes." +
+            "\n\nIf you did not request this, please ignore.";
+
+    sendMail(to, "Password Reset OTP", body);
+}
+
 }

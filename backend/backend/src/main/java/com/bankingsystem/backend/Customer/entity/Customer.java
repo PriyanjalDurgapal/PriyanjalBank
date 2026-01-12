@@ -77,7 +77,7 @@ public class Customer {
     void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.status = "ACTIVE";
-        this.role = "EMPLOYEE";
+        this.role = "CUSTOMER";
     }
  
 }

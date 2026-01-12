@@ -34,12 +34,16 @@ public class Admin {
 
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false, length = 20)
+    private String status; // ADMIN
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.active = true;
         this.role = "ADMIN";
+        this.status="ACTIVE";
     }
 
     @PreUpdate

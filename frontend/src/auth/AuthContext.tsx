@@ -23,6 +23,8 @@ export const AuthProvider =({children}:{children:React.ReactNode})=>{
     localStorage.clear();
     setToken(null);
     setRole(null);
+    
+  
   };
  return (
     <AuthContext.Provider value={{ token, role, login, logout }}>

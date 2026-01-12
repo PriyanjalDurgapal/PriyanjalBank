@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity   
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -38,10 +38,24 @@ public class SecurityConfig {
             .httpBasic(basic -> basic.disable())
 
             .authorizeHttpRequests(auth -> auth
+                // CORS preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                //  PUBLIC LOGIN ENDPOINTS
                 .requestMatchers(HttpMethod.POST, "/api/admin/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/customer/login").permitAll()
-                .requestMatchers("/error").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+
+
+                //  TOKEN + ROLE VERIFICATION
+                .requestMatchers("/api/auth/verify").authenticated()
+
+                //  ROLE-BASED ACCESS (ADDED)
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/staff-customers/**").hasRole("ADMIN")
+                .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
+
+                // EVERYTHING ELSE NEEDS AUTH
                 .anyRequest().authenticated()
             )
 
@@ -49,7 +63,6 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-          
             .addFilterBefore(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
@@ -62,7 +75,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH","DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 

@@ -1,4 +1,4 @@
-// src/pages/admin/AdminDashboard.tsx (or wherever it is)
+
 
 import DashboardLayout from "../../components/layout/DashboradLayout"; // Fixed typo
 

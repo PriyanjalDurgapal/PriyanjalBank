@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import ProtectedRoute from "./auth/ProtectedRoute";
-
-// NEW PAGES
+import CustomerLogin from "./pages/customer/Customerlogin";
 import CustomerList from "./pages/admin/customers/CustomerList";
 import AddCustomer from "./pages/admin/customers/AddCustomer";
 import DashboardLayout from "./components/layout/DashboradLayout";
-import CustomerLogin from "./pages/customer/Customerlogin";
+import VerifyAccess from "./auth/VerifyAccess";
+import CustomerDashboard from "./pages/customer/CustomerDashboard";
+import CustomerSecurityLogs from "./pages/customer/CustomerSecurityLogs";
 
 function App() {
   return (
@@ -20,36 +20,69 @@ function App() {
       <Route
         path="/admin/dashboard"
         element={
-          <ProtectedRoute>
+          <VerifyAccess allowedRoles={["ADMIN"]}>
             <AdminDashboard />
-          </ProtectedRoute>
+          </VerifyAccess>
         }
       />
 
-      {/* CUSTOMER LIST */}
       <Route
         path="/admin/customers"
         element={
-          <ProtectedRoute>
-               <DashboardLayout>
-            <CustomerList />
+          <VerifyAccess allowedRoles={["ADMIN"]}>
+            <DashboardLayout>
+              <CustomerList />
             </DashboardLayout>
-          </ProtectedRoute>
+          </VerifyAccess>
         }
       />
 
-      {/* ADD NEW CUSTOMER */}
+
       <Route
         path="/admin/customers/add"
         element={
-          <ProtectedRoute>
+          <VerifyAccess allowedRoles={["ADMIN"]}>
             <DashboardLayout>
-            <AddCustomer />
+              <AddCustomer />
             </DashboardLayout>
-          </ProtectedRoute>
+          </VerifyAccess>
+        }
+      />
+      <Route
+        path="/admin/logs"
+        element={
+          <VerifyAccess allowedRoles={["Admin"]}>
+            <DashboardLayout>
+            <CustomerSecurityLogs />
+            </DashboardLayout>
+          </VerifyAccess>
+          
+        }
+      />
+
+      {/* =================================Customer paths========================================== */}
+   
+     <Route
+        path="/customer/dashboard"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <CustomerDashboard />
+          </VerifyAccess>
+        }
+      />
+     <Route
+        path="/customer/logs"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+            <CustomerSecurityLogs />
+            </DashboardLayout>
+          </VerifyAccess>
+          
         }
       />
     </Routes>
+    
   );
 }
 
