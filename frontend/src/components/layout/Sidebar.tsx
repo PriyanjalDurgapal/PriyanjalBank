@@ -101,6 +101,13 @@ const Sidebar = ({
                 active={isActive("/admin/transactions")}
               />
             )}
+            {role === "ADMIN" && (
+              <SidebarItem
+                to="/admin/card-approval"
+                label="Card Approval"
+                active={isActive("/admin/card-approval")}
+              />
+            )}
             {role === "EMPLOYEE" && (
               <SidebarItem
                 to="/admin/transactions"
@@ -118,9 +125,9 @@ const Sidebar = ({
 
 {role === "CUSTOMER" && (
   <SidebarItem
-    to="/customer/accounts"
+    to="/customer/my-accounts"
     label="My Accounts"
-    active={isActive("/customer/accounts")}
+    active={isActive("/customer/my-accounts")}
   />
 )}
 {role === "CUSTOMER" && (
@@ -131,11 +138,13 @@ const Sidebar = ({
   />
 )}
 
+
+
 {role === "CUSTOMER" && (
   <SidebarItem
-    to="/customer/transactions"
+    to="/customer/transaction-history"
     label="Transactions"
-    active={isActive("/customer/transactions")}
+    active={isActive("/customer/transaction-history")}
   />
 )}
 
@@ -149,7 +158,7 @@ const Sidebar = ({
 
 {role === "CUSTOMER" && (
   <SidebarItem
-    to="/customer/cards"
+    to="/customer/card"
     label="My Cards"
     active={isActive("/customer/cards")}
   />

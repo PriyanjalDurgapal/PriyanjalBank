@@ -48,3 +48,20 @@ export const fetchCustomers = (
     params: { search, status, page, size },
   });
 };
+// ---------- ACCOUNTS ----------
+export const getAccountsByCustomer = (customerId: number) =>
+  api.get(`/admin/accounts/customer/${customerId}`);
+
+export const createAccountApi = (customerId: number, type: string) =>
+  api.post(`/admin/accounts/create`, null, {
+    params: { customerId, type },
+  });
+export const freezeAccountApi = (id: number) =>
+  api.post(`/admin/accounts/${id}/freeze`);
+
+export const unfreezeAccountApi = (id: number) =>
+  api.post(`/admin/accounts/${id}/unfreeze`);
+
+export const closeAccountApi = (id: number) =>
+  api.delete(`/admin/accounts/${id}`);
+

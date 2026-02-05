@@ -8,6 +8,11 @@ import DashboardLayout from "./components/layout/DashboradLayout";
 import VerifyAccess from "./auth/VerifyAccess";
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
 import CustomerSecurityLogs from "./pages/customer/CustomerSecurityLogs";
+import CardPage from "./pages/customer/card/CardPage";
+import CardApprovals from "./pages/admin/card/CardApprovals";
+import MyAccounts from "./pages/customer/MyAccounts";
+import AtmPage from "./pages/atm/AtmPage";
+import CustomerTransactions from "./pages/customer/CustomerTransactions";
 
 function App() {
   return (
@@ -15,6 +20,7 @@ function App() {
       {/* PUBLIC */}
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/" element={<CustomerLogin />} />
+      <Route path="/atm" element={<AtmPage />} />
 
       {/* ADMIN DASHBOARD */}
       <Route
@@ -32,6 +38,16 @@ function App() {
           <VerifyAccess allowedRoles={["ADMIN"]}>
             <DashboardLayout>
               <CustomerList />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+      <Route
+        path="/admin/card-approval"
+        element={
+          <VerifyAccess allowedRoles={["ADMIN"]}>
+            <DashboardLayout>
+              <CardApprovals/>
             </DashboardLayout>
           </VerifyAccess>
         }
@@ -70,6 +86,26 @@ function App() {
           </VerifyAccess>
         }
       />
+       <Route
+        path="/customer/my-accounts"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+            <MyAccounts />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+       <Route
+        path="/customer/transaction-history"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+            <CustomerTransactions />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
      <Route
         path="/customer/logs"
         element={
@@ -81,7 +117,19 @@ function App() {
           
         }
       />
+      <Route
+  path="/customer/card"
+  element={
+    <VerifyAccess allowedRoles={["CUSTOMER"]}>
+      <DashboardLayout>
+        <CardPage />
+      </DashboardLayout>
+    </VerifyAccess>
+  }
+/>
+
     </Routes>
+    
     
   );
 }
