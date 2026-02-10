@@ -3,6 +3,7 @@ package com.bankingsystem.backend.card.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.bankingsystem.backend.admin.repository.AccountRepository;
 import com.bankingsystem.backend.card.entity.VirtualCard;
 import com.bankingsystem.backend.card.repository.VirtualCardRepository;
 
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class CardPinService {
 
     private final VirtualCardRepository cardRepo;
+      private final AccountRepository accountRepository;
     private final CardAuditService audit;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 

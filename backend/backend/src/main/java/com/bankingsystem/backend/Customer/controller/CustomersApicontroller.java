@@ -1,7 +1,5 @@
 package com.bankingsystem.backend.Customer.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankingsystem.backend.Customer.dto.CustomerLoginRequest;
 import com.bankingsystem.backend.Customer.dto.CustomerLoginResponse;
-import com.bankingsystem.backend.Customer.entity.Customer;
+import com.bankingsystem.backend.Customer.dto.CustomerProfileResponse;
 import com.bankingsystem.backend.Customer.service.CustomerApiServices;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,13 +40,18 @@ public class CustomersApicontroller {
     }
 
     // ================= GET PROFILE =================
-    @GetMapping("/profile")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public Customer getProfile(Authentication auth) {
-        String email = auth.getName(); // from JWT
-        return customerApiServices.getProfileByEmail(email);
-    }
-
+    // @GetMapping("/profile")
+    // @PreAuthorize("hasRole('CUSTOMER')")
+    // public Customer getProfile(Authentication auth) {
+    //     String email = auth.getName(); // from JWT
+    //     return customerApiServices.getProfileByEmail(email);
+    // }
+@GetMapping("/profile")
+@PreAuthorize("hasRole('CUSTOMER')")
+public CustomerProfileResponse getProfile(Authentication auth) {
+    String email = auth.getName();
+    return customerApiServices.getProfileByEmail(email);
+}
     // ================= IP HELPER =================
     private String getClientIp(HttpServletRequest request) {
         String xfHeader = request.getHeader("X-Forwarded-For");

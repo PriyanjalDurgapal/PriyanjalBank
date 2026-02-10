@@ -13,6 +13,7 @@ import CardApprovals from "./pages/admin/card/CardApprovals";
 import MyAccounts from "./pages/customer/MyAccounts";
 import AtmPage from "./pages/atm/AtmPage";
 import CustomerTransactions from "./pages/customer/CustomerTransactions";
+import RechargePage from "./pages/customer/RechargePage";
 
 function App() {
   return (
@@ -102,6 +103,16 @@ function App() {
           <VerifyAccess allowedRoles={["CUSTOMER"]}>
             <DashboardLayout>
             <CustomerTransactions />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+       <Route
+        path="/customer/recharge"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+            <RechargePage />
             </DashboardLayout>
           </VerifyAccess>
         }

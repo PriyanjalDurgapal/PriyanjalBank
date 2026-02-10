@@ -7,10 +7,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.bankingsystem.backend.Customer.dto.CustomerLoginRequest;
 import com.bankingsystem.backend.Customer.dto.CustomerLoginResponse;
+import com.bankingsystem.backend.Customer.dto.CustomerProfileResponse;
 import com.bankingsystem.backend.Customer.entity.Customer;
 import com.bankingsystem.backend.Customer.repository.CustomerRepository;
-import com.bankingsystem.backend.common.service.AuditLogService;
 import com.bankingsystem.backend.auth.JwtUtil;
+import com.bankingsystem.backend.common.service.AuditLogService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -97,11 +98,31 @@ public class CustomerApiServices {
     }
 
     // ================= GET PROFILE =================
-    public Customer getProfileByEmail(String email) {
-        return customerRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Customer not found"
-                ));
-    }
+//     public Customer getProfileByEmail(String email) {
+//         return customerRepository.findByEmail(email)
+//                 .orElseThrow(() -> new ResponseStatusException(
+//                         HttpStatus.NOT_FOUND,
+//                         "Customer not found"
+//                 ));
+//     }
+public CustomerProfileResponse getProfileByEmail(String email) {
+
+    Customer customer = customerRepository.findByEmail(email)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Customer not found"
+            ));
+
+    return CustomerProfileResponse.builder()
+            .customerId(customer.getCustomerId())
+            .fullName(customer.getFullName())
+            .email(customer.getEmail())
+            .mobile(customer.getMobile())
+            .dob(customer.getDob())
+            .gender(customer.getGender())
+            .address(customer.getAddress())
+            .accountNumber(customer.getAccountNumber())
+            .status(customer.getStatus())
+            .build();
+}
 }

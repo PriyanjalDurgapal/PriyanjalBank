@@ -132,6 +132,13 @@ const Sidebar = ({
 )}
 {role === "CUSTOMER" && (
   <SidebarItem
+    to="/customer/recharge"
+    label="Recharge"
+    active={isActive("/customer/recharge")}
+  />
+)}
+{role === "CUSTOMER" && (
+  <SidebarItem
     to="/customer/logs"
     label="My Logs"
     active={isActive("/customer/logs")}
@@ -148,13 +155,7 @@ const Sidebar = ({
   />
 )}
 
-{role === "CUSTOMER" && (
-  <SidebarItem
-    to="/customer/transfer"
-    label="Transfer Money"
-    active={isActive("/customer/transfer")}
-  />
-)}
+
 
 {role === "CUSTOMER" && (
   <SidebarItem
@@ -164,21 +165,14 @@ const Sidebar = ({
   />
 )}
 
-{role === "CUSTOMER" && (
-  <SidebarItem
-    to="/customer/loans"
-    label="Loans"
-    active={isActive("/customer/loans")}
-  />
-)}
 
-{role === "CUSTOMER" && (
+{/* {role === "CUSTOMER" && (
   <SidebarItem
     to="/customer/profile"
     label="Profile"
     active={isActive("/customer/profile")}
   />
-)}
+)} */}
 
 {role === "CUSTOMER" && (
   <SidebarItem
