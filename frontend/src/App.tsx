@@ -14,6 +14,12 @@ import MyAccounts from "./pages/customer/MyAccounts";
 import AtmPage from "./pages/atm/AtmPage";
 import CustomerTransactions from "./pages/customer/CustomerTransactions";
 import RechargePage from "./pages/customer/RechargePage";
+import AllAccounts from "./pages/admin/customers/AllAccounts";
+import ChangePassword from "./components/layout/Changepassowrd";
+import AddStaff from "./pages/admin/staff/AddStaff";
+import ViewStaff from "./pages/admin/staff/ViewStaff";
+import StaffLogin from "./pages/staff/StaffLogin";
+import StaffDashboard from "./pages/staff/StaffDashboard";
 
 function App() {
   return (
@@ -34,11 +40,21 @@ function App() {
       />
 
       <Route
-        path="/admin/customers"
+        path="/allcustomers"
+        element={
+          <VerifyAccess allowedRoles={["ADMIN","STAFF"]}>
+            <DashboardLayout>
+              <CustomerList />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+      <Route
+        path="/admin/all-staff"
         element={
           <VerifyAccess allowedRoles={["ADMIN"]}>
             <DashboardLayout>
-              <CustomerList />
+              <ViewStaff />
             </DashboardLayout>
           </VerifyAccess>
         }
@@ -48,7 +64,7 @@ function App() {
         element={
           <VerifyAccess allowedRoles={["ADMIN"]}>
             <DashboardLayout>
-              <CardApprovals/>
+              <CardApprovals />
             </DashboardLayout>
           </VerifyAccess>
         }
@@ -56,9 +72,9 @@ function App() {
 
 
       <Route
-        path="/admin/customers/add"
+        path="/customers/add"
         element={
-          <VerifyAccess allowedRoles={["ADMIN"]}>
+          <VerifyAccess allowedRoles={["ADMIN","STAFF"]}>
             <DashboardLayout>
               <AddCustomer />
             </DashboardLayout>
@@ -70,16 +86,38 @@ function App() {
         element={
           <VerifyAccess allowedRoles={["Admin"]}>
             <DashboardLayout>
-            <CustomerSecurityLogs />
+              <CustomerSecurityLogs />
             </DashboardLayout>
           </VerifyAccess>
-          
+
+        }
+      />
+      <Route
+        path="/admin/addstaff"
+        element={
+          <VerifyAccess allowedRoles={["Admin"]}>
+            <DashboardLayout>
+              <AddStaff />
+            </DashboardLayout>
+          </VerifyAccess>
+
+        }
+      />
+      <Route
+        path="/all-accounts"
+        element={
+          <VerifyAccess allowedRoles={["Admin"]}>
+            <DashboardLayout>
+              <AllAccounts />
+            </DashboardLayout>
+          </VerifyAccess>
+
         }
       />
 
       {/* =================================Customer paths========================================== */}
-   
-     <Route
+
+      <Route
         path="/customer/dashboard"
         element={
           <VerifyAccess allowedRoles={["CUSTOMER"]}>
@@ -87,61 +125,92 @@ function App() {
           </VerifyAccess>
         }
       />
-       <Route
+      <Route
         path="/customer/my-accounts"
         element={
           <VerifyAccess allowedRoles={["CUSTOMER"]}>
             <DashboardLayout>
-            <MyAccounts />
+              <MyAccounts />
             </DashboardLayout>
           </VerifyAccess>
         }
       />
-       <Route
+      <Route
+        path="/customer/change-password"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+              <ChangePassword />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+      <Route
         path="/customer/transaction-history"
         element={
           <VerifyAccess allowedRoles={["CUSTOMER"]}>
             <DashboardLayout>
-            <CustomerTransactions />
+              <CustomerTransactions />
             </DashboardLayout>
           </VerifyAccess>
         }
       />
-       <Route
+      <Route
         path="/customer/recharge"
         element={
           <VerifyAccess allowedRoles={["CUSTOMER"]}>
             <DashboardLayout>
-            <RechargePage />
+              <RechargePage />
             </DashboardLayout>
           </VerifyAccess>
-        }
-      />
-     <Route
-        path="/customer/logs"
-        element={
-          <VerifyAccess allowedRoles={["CUSTOMER"]}>
-            <DashboardLayout>
-            <CustomerSecurityLogs />
-            </DashboardLayout>
-          </VerifyAccess>
-          
         }
       />
       <Route
-  path="/customer/card"
-  element={
-    <VerifyAccess allowedRoles={["CUSTOMER"]}>
-      <DashboardLayout>
-        <CardPage />
-      </DashboardLayout>
-    </VerifyAccess>
-  }
-/>
+        path="/my/logs"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER","STAFF"]}>
+            <DashboardLayout>
+              <CustomerSecurityLogs />
+            </DashboardLayout>
+          </VerifyAccess>
+
+        }
+      />
+      <Route
+        path="/customer/card"
+        element={
+          <VerifyAccess allowedRoles={["CUSTOMER"]}>
+            <DashboardLayout>
+              <CardPage />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
+
+
+      {/* ============================staff================================================================== */}
+      <Route
+        path="/staff/login"
+        element={
+
+          <StaffLogin />
+
+        } />
+
+      <Route
+        path="/staff/dashboard"
+        element={
+          <VerifyAccess allowedRoles={["STAFF"]}>
+            <DashboardLayout>
+              <StaffDashboard />
+            </DashboardLayout>
+          </VerifyAccess>
+        }
+      />
 
     </Routes>
-    
-    
+
+
   );
 }
 

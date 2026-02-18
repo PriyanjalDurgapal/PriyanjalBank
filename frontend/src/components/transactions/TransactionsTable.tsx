@@ -47,13 +47,14 @@ export default function TransactionsTable({ transactions, limit }: Props) {
         />
         <FilterButton
           active={filter === "DEPOSIT"}
-          icon={<FiArrowUpCircle />}
+          
+          icon={<FiArrowDownCircle />}
           label="DEPOSIT"
           onClick={() => setFilter("DEPOSIT")}
         />
         <FilterButton
           active={filter === "WITHDRAW"}
-          icon={<FiArrowDownCircle />}
+        icon={<FiArrowUpCircle />}
           label="WITHDRAW"
           onClick={() => setFilter("WITHDRAW")}
         />
@@ -92,9 +93,9 @@ export default function TransactionsTable({ transactions, limit }: Props) {
                     }`}
                   >
                     {tx.type === "DEPOSIT" ? (
-                      <HiOutlineArrowUpRight size={18} />
-                    ) : (
                       <HiOutlineArrowDownLeft size={18} />
+                    ) : (
+                      <HiOutlineArrowUpRight size={18} />
                     )}
                     {tx.type}
                   </td>
@@ -143,7 +144,7 @@ export default function TransactionsTable({ transactions, limit }: Props) {
                 }`}
               >
                 {tx.type === "DEPOSIT" ? (
-                  <HiOutlineArrowUpRight size={18} />
+                  <HiOutlineArrowDownLeft size={18} />
                 ) : (
                   <HiOutlineArrowDownLeft size={18} />
                 )}

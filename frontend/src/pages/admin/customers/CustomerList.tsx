@@ -73,7 +73,7 @@ const CustomerList = () => {
       <table className="min-w-full border border-gray-700 rounded-md">
         <thead className="bg-gray-800 text-gray-200">
           <tr>
-            <th className="px-4 py-2 border">Account No</th>
+          
             <th className="px-4 py-2 border">Full Name</th>
             <th className="px-4 py-2 border">Status</th>
             <th className="px-4 py-2 border">Created By</th>
@@ -84,9 +84,7 @@ const CustomerList = () => {
         <tbody>
           {customers.map((cust) => (
             <tr key={cust.id} className="odd:bg-gray-900 even:bg-gray-800">
-              <td className="px-4 py-2 border">
-  <HighlightText text={cust.accountNumber} highlight={search} />
-</td>
+              
 
 <td className="px-4 py-2 border">
   <HighlightText text={cust.fullName} highlight={search} />

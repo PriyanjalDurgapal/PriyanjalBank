@@ -52,8 +52,7 @@ public class Customer {
     @Column(nullable = false)
     private String createdByRole; 
 
-    @Column(nullable = false, unique = true)
-    private String accountNumber;
+   
 
     @Column(nullable = false)
     private String password; 

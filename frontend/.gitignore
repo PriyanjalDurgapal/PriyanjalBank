@@ -1,24 +1,65 @@
-# Logs
-logs
+############################################
+# GENERAL
+############################################
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+logs/
+*.tmp
+*.swp
 .DS_Store
+Thumbs.db
+
+############################################
+# IDE
+############################################
+.vscode/
+.idea/
+*.iml
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+############################################
+# ==========================================
+# BACKEND (Spring Boot / Maven)
+# ==========================================
+############################################
+
+# Maven build folder
+backend/**/target/
+
+# Uploaded files (if storing user files)
+backend/**/uploads/
+
+# Ignore ONLY dev properties
+backend/**/src/main/resources/application-dev.properties
+
+# Optional: ignore other local profiles
+backend/**/src/main/resources/application-local.properties
+
+############################################
+# ==========================================
+# FRONTEND (React / Vite)
+# ==========================================
+############################################
+
+# Node dependencies
+frontend/node_modules/
+
+# Production build output
+frontend/dist/
+
+# Environment files (keep secrets out of git)
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+############################################
+# PACKAGE MANAGER LOGS
+############################################
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

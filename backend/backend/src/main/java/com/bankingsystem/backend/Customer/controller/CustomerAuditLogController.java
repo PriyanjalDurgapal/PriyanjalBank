@@ -13,16 +13,25 @@ import com.bankingsystem.backend.common.repository.AuditLogRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/customer/logs")
+@RequestMapping("/api/my_logs")
 @RequiredArgsConstructor
 public class CustomerAuditLogController {
 
     private final AuditLogRepository auditLogRepository;
+    
 
     @GetMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER','STAFF')")
     public List<AuditLog> myLogs(Authentication auth) {
-        return auditLogRepository
-                .findByEmailOrderByCreatedAtDesc(auth.getName());
-    }
+        String email = auth.getName();
+String role = auth.getAuthorities()
+            .stream()
+            .findFirst()
+            .orElseThrow()
+            .getAuthority()
+            .replace("ROLE_", "");
+
+    return auditLogRepository
+            .findByEmailAndRoleOrderByCreatedAtDesc(email, role);
+}
 }

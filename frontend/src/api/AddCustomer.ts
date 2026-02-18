@@ -50,18 +50,18 @@ export const fetchCustomers = (
 };
 // ---------- ACCOUNTS ----------
 export const getAccountsByCustomer = (customerId: number) =>
-  api.get(`/admin/accounts/customer/${customerId}`);
+  api.get(`/see/accounts/customer/${customerId}`);
 
 export const createAccountApi = (customerId: number, type: string) =>
-  api.post(`/admin/accounts/create`, null, {
+  api.post(`/see/accounts/create`, null, {
     params: { customerId, type },
   });
 export const freezeAccountApi = (id: number) =>
-  api.post(`/admin/accounts/${id}/freeze`);
+  api.post(`/see/accounts/${id}/freeze`);
 
 export const unfreezeAccountApi = (id: number) =>
-  api.post(`/admin/accounts/${id}/unfreeze`);
+  api.post(`/see/accounts/${id}/unfreeze`);
 
 export const closeAccountApi = (id: number) =>
-  api.delete(`/admin/accounts/${id}`);
+  api.delete(`/see/accounts/${id}`);
 

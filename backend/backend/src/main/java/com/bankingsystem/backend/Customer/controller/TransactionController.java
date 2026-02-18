@@ -35,10 +35,10 @@ public class TransactionController {
             @RequestBody RechargeTransactionRequest req
     ) {
 
-        // 1️⃣ Verify PIN
+        // Verify PIN
         pinService.verifyPin(req.getAccountNumber(), req.getPin());
 
-        // 2️⃣ Debit Account
+        //  Debit Account
         return ResponseEntity.ok(
                 transactionService.debit(
                         req.getAccountNumber(),

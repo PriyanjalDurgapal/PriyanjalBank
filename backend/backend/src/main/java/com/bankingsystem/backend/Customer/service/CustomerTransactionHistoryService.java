@@ -44,15 +44,15 @@ public class CustomerTransactionHistoryService {
                         .findByAccountNumberOrderByCreatedAtDesc(accountNumber);
 
         return transactions.stream()
-                .map(tx -> CustomerTransactionHistoryDto.builder()
-                        .id(tx.getId())
-                        .type(tx.getType())
-                        .amount(tx.getAmount())
-                        .balanceAfter(tx.getBalanceAfter())
-                        .channel(tx.getChannel())
-                        .serviceProvider(tx.getServiceProvider())
-                        .createdAt(tx.getCreatedAt())
-                        .build())
-                .toList();
+        .map(tx -> CustomerTransactionHistoryDto.builder()
+                .id(tx.getId())
+                .type(tx.getType().name()) 
+                .amount(tx.getAmount())
+                .balanceAfter(tx.getBalanceAfter())
+                .channel(tx.getChannel())
+                .serviceProvider(tx.getServiceProvider())
+                .createdAt(tx.getCreatedAt())
+                .build())
+        .toList();
     }
 }

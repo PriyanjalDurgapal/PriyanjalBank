@@ -17,6 +17,7 @@ import com.bankingsystem.backend.atm.entity.AtmBlock;
 import com.bankingsystem.backend.atm.entity.AtmOtp;
 import com.bankingsystem.backend.atm.entity.AtmTransaction;
 import com.bankingsystem.backend.atm.enums.TransactionChannel;
+import com.bankingsystem.backend.atm.enums.TransactionType;
 import com.bankingsystem.backend.atm.repository.AtmBlockRepository;
 import com.bankingsystem.backend.atm.repository.AtmOtpRepository;
 import com.bankingsystem.backend.atm.repository.AtmTransactionRepository;
@@ -63,7 +64,15 @@ public class AtmService {
                         )
                 );
 
-        Customer customer=customerRepository.findById(account.getCustomerId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"Customer not found"));
+        Customer customer = customerRepository
+                .findById(account.getCustomerId())
+                .orElseThrow(() ->
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Customer not found"
+                        )
+                );
+
         VirtualCard card = virtualCardRepository
                 .findByCustomerRefId(account.getCustomerId())
                 .orElseThrow(() ->
@@ -78,9 +87,9 @@ public class AtmService {
             int attempts = card.getFailedPinAttempts() + 1;
             card.setFailedPinAttempts(attempts);
             virtualCardRepository.save(card);
-            String maskedAccount = "XXXX" +
-        accountNumber.substring(accountNumber.length() - 3);
 
+            String maskedAccount = "XXXX" +
+                    accountNumber.substring(accountNumber.length() - 3);
 
             if (attempts == 3) {
                 emailService.sendMail(
@@ -97,13 +106,14 @@ public class AtmService {
                                 .blockedUntil(LocalDateTime.now().plusHours(24))
                                 .build()
                 );
+
                 emailService.sendMail(
-                    customer.getEmail(),
-                    "ATM Blocked",
-                    "Your ATM access for account "
-                            + maskedAccount
-                            + " has been blocked for 24 hours due to multiple incorrect PIN attempts."
-            );
+                        customer.getEmail(),
+                        "ATM Blocked",
+                        "Your ATM access for account "
+                                + maskedAccount
+                                + " has been blocked for 24 hours due to multiple incorrect PIN attempts."
+                );
 
                 throw new ResponseStatusException(
                         HttpStatus.FORBIDDEN,
@@ -159,10 +169,10 @@ public class AtmService {
                 AtmOtp.builder()
                         .accountNumber(accountNumber)
                         .otp(otp)
-                        .attempts(0)                 
-                        .used(false)                 
-                        .createdAt(LocalDateTime.now()) 
-                        .expiresAt(LocalDateTime.now().plusMinutes(10)) 
+                        .attempts(0)
+                        .used(false)
+                        .createdAt(LocalDateTime.now())
+                        .expiresAt(LocalDateTime.now().plusMinutes(10))
                         .build()
         );
 
@@ -170,7 +180,7 @@ public class AtmService {
                 email,
                 "ATM OTP Verification",
                 "Your ATM OTP is: " + otp +
-                "\n\nValid for 10 minutes.\nDo not share this OTP."
+                        "\n\nValid for 10 minutes.\nDo not share this OTP."
         );
     }
 
@@ -183,7 +193,7 @@ public class AtmService {
             String type,
             double amount,
             TransactionChannel channel,
-        String serviceProvider
+            String serviceProvider
     ) {
 
         AtmOtp atmOtp = atmOtpRepository
@@ -209,7 +219,19 @@ public class AtmService {
                 .findByAccountNumber(accountNumber)
                 .orElseThrow();
 
-        if ("WITHDRAW".equalsIgnoreCase(type)
+       
+        TransactionType transactionType;
+        try {
+            transactionType = TransactionType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Invalid transaction type"
+            );
+        }
+
+        
+        if (transactionType == TransactionType.WITHDRAW
                 && account.getBalance() < amount) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -217,22 +239,23 @@ public class AtmService {
             );
         }
 
-        if ("DEPOSIT".equalsIgnoreCase(type)) {
+        if (transactionType == TransactionType.DEPOSIT) {
             account.setBalance(account.getBalance() + amount);
         } else {
             account.setBalance(account.getBalance() - amount);
         }
-         if (channel == null || serviceProvider == null) {
-        channel = TransactionChannel.ATM_CARD;
-        serviceProvider = "ATM_CARD";
-    }
+
+        if (channel == null || serviceProvider == null) {
+            channel = TransactionChannel.ATM_CARD;
+            serviceProvider = "ATM_CARD";
+        }
 
         accountRepository.save(account);
 
         atmTransactionRepository.save(
                 AtmTransaction.builder()
                         .accountNumber(accountNumber)
-                        .type(type.toUpperCase())
+                        .type(transactionType)
                         .amount(amount)
                         .balanceAfter(account.getBalance())
                         .channel(channel)
@@ -240,9 +263,13 @@ public class AtmService {
                         .createdAt(LocalDateTime.now())
                         .build()
         );
+
         sendTransactionAlert(account, type, amount);
     }
-        public void verifyOtp(String accountNumber, String otp) {
+
+    // ================= VERIFY OTP =================
+
+    public void verifyOtp(String accountNumber, String otp) {
 
         AtmOtp atmOtp = atmOtpRepository
                 .findByAccountNumberAndOtpAndUsedFalse(accountNumber, otp)
@@ -259,45 +286,40 @@ public class AtmService {
                     "OTP expired"
             );
         }
-
-    
     }
 
+    // ================= HELPER METHODS =================
 
-//     helper methode
+    public void sendTransactionAlert(Account account, String type, double amount) {
 
+        Customer customer = customerRepository
+                .findById(account.getCustomerId())
+                .orElseThrow();
 
-public void sendTransactionAlert(Account account,String type,double amount){
-
-        Customer customer=customerRepository.findById(account.getCustomerId()).orElseThrow();
-
-        String maskedAccount=maskedAccountNumber(account.getAccountNumber());
+        String maskedAccount = maskedAccountNumber(account.getAccountNumber());
 
         String message;
 
-        if("DEPOSIT".equalsIgnoreCase(type)){
-                message="₹" + amount + " credited to your account "
-                + maskedAccount
-                + ". Available balance: ₹" + account.getBalance();
+        if ("DEPOSIT".equalsIgnoreCase(type)) {
+            message = "₹" + amount + " credited to your account "
+                    + maskedAccount
+                    + ". Available balance: ₹" + account.getBalance();
+        } else {
+            message = "₹" + amount + " debited from your account "
+                    + maskedAccount
+                    + ". Available balance: ₹" + account.getBalance();
         }
-        else{
-                 message = "₹" + amount + " debited from your account "
-                + maskedAccount
-                + ". Available balance: ₹" + account.getBalance();
+
+        emailService.sendMail(customer.getEmail(),
+                "ATM Transaction Alert",
+                message);
+    }
+
+    public String maskedAccountNumber(String accountNumber) {
+        if (accountNumber.length() < 3) {
+            return "XXXX";
         }
-
-        emailService.sendMail(customer.getEmail(), "ATM Transaction Alert",message);
-}
-
-
-
-
-
-public String maskedAccountNumber(String accountNumber){
-        if(accountNumber.length()<3){
-                return "XXXX";
-        }
-        String last3=accountNumber.substring(accountNumber.length()-3);
+        String last3 = accountNumber.substring(accountNumber.length() - 3);
         return "XXX" + last3;
-}
+    }
 }

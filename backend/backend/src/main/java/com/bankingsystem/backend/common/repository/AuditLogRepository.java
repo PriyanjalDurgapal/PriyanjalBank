@@ -8,5 +8,10 @@ import com.bankingsystem.backend.common.Entity.AuditLog;
 
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
-    List<AuditLog> findByEmailOrderByCreatedAtDesc(String email);
+    // List<AuditLog> findByEmailOrderByCreatedAtDesc(String email);
+        List<AuditLog> findByEmailAndRoleOrderByCreatedAtDesc(
+            String email,
+            String role
+    );
+
 }

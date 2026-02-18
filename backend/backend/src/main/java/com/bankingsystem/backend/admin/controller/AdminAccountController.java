@@ -5,18 +5,24 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.bankingsystem.backend.admin.dto.AdminDashboardDTO;
 import com.bankingsystem.backend.admin.entity.Account;
 import com.bankingsystem.backend.admin.service.AdminAccountService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/admin/accounts")
+@RequestMapping("/api/see/accounts")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','STAFF')")
 public class AdminAccountController {
 
     private final AdminAccountService service;
@@ -71,4 +77,13 @@ public class AdminAccountController {
         service.close(id);
         return ResponseEntity.ok("Account closed successfully");
     }
+
+
+//  @GetMapping("/getallcustomernumber")
+// public ResponseEntity<List<String>> getAllCustomerNumbers() {
+//     List<String> numbers = adminAccountService.getAllAccountNumbers();
+//     return ResponseEntity.ok(numbers);
+// }
+
+
 }

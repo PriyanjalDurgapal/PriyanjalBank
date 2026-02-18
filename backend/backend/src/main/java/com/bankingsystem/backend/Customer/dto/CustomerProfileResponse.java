@@ -3,7 +3,11 @@ package com.bankingsystem.backend.Customer.dto;
 
 import java.time.LocalDate;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -19,6 +23,6 @@ public class CustomerProfileResponse {
     private LocalDate dob;
     private String gender;
     private String address;
-    private String accountNumber;
+    
     private String status;
 }

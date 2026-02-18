@@ -30,7 +30,7 @@ public class CustomerAuditLog {
 
     private Long customerId;
 
-    private String action; // UPDATE / DELETE
+    private String action; 
     private String performedBy;
     private LocalDateTime performedAt;
 

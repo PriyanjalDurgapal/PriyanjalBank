@@ -21,13 +21,13 @@ public class Admin {
     private String email;
 
     @Column(nullable = false)
-    private String password; // BCrypt hash only
+    private String password; 
 
     @Column(nullable = false)
     private boolean active;
 
     @Column(nullable = false, length = 20)
-    private String role; // ADMIN
+    private String role; 
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -35,7 +35,7 @@ public class Admin {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, length = 20)
-    private String status; // ADMIN
+    private String status; 
 
     @PrePersist
     public void onCreate() {

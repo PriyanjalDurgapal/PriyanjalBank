@@ -20,8 +20,9 @@ const CustomerSecurityLogs = () => {
     const fetchLogs = async () => {
       try {
         setLoading(true);
-        const res = await api.get<SecurityLog[]>("/customer/logs");
+        const res = await api.get<SecurityLog[]>("/my_logs");
         setLogs(res.data);
+        
       } catch (err: any) {
         console.error(err);
         setError(err?.response?.data?.message || "Failed to fetch logs");

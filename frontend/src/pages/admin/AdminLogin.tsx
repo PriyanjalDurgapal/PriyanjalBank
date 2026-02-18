@@ -7,6 +7,7 @@ import AuthCard from "../../components/auth/AuthCard";
 import AuthInput from "../../components/auth/AuthInput";
 import AuthButton from "../../components/auth/AuthButton";
 import Popup from "../../components/ui/Popup";
+import ForgotPasswordModal from "../../components/ui/ForgotPasswordModal";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,7 @@ const AdminLogin = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [open,setOpen]=useState(false);
 
   const handleLogin = async () => {
     try {
@@ -33,6 +35,7 @@ const AdminLogin = () => {
   };
 
   return (
+    <>
     <AuthCard
       title="Admin Login"
       subtitle="Secure administrative access"
@@ -57,10 +60,18 @@ const AdminLogin = () => {
         onChange={(e) => setPassword(e.target.value)}
         className="mb-8"
       />
+       <div className="text-right mb-6">
+      <button type="button" onClick={()=> setOpen(true)} className="text-sm text-green-600 hover:underline"> Forgot Password?</button>
+    </div>
 
       <AuthButton text="LOGIN" onClick={handleLogin} />
     </AuthCard>
+    <ForgotPasswordModal isOpen={open} onClose={()=>setOpen(false)}/>
+
+   
+    </>
   );
+  
 };
 
 export default AdminLogin;

@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/atm/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/accounts/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/api/staff-auth/login").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
 
 
                 //  TOKEN + ROLE VERIFICATION
@@ -54,10 +56,15 @@ public class SecurityConfig {
 
                 //  ROLE-BASED ACCESS (ADDED)
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/staff-customers/**").hasRole("ADMIN")
+                .requestMatchers("/api/common/dashboard").hasAnyRole("ADMIN","STAFF")
+                .requestMatchers("/api/see/accounts/**").hasAnyRole("ADMIN","STAFF")
+                .requestMatchers("/api/admin-staff/**").hasRole("ADMIN")
+                .requestMatchers("/api/staff-customers/**").hasAnyRole("ADMIN","STAFF")
                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
-
-                // EVERYTHING ELSE NEEDS AUTH
+                .requestMatchers("/api/my_logs/**").hasAnyRole("CUSTOMER", "ADMIN","STAFF")
+                .requestMatchers("/api/staff/**").hasRole("STAFF")
+                .requestMatchers("/api/staff-auth/**").hasRole("STAFF")
+               // EVERYTHING ELSE NEEDS AUTH
                 .anyRequest().authenticated()
             )
 

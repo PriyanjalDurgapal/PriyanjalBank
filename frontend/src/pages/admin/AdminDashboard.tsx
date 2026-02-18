@@ -1,26 +1,48 @@
-
-
-import DashboardLayout from "../../components/layout/DashboradLayout"; // Fixed typo
+import { useEffect, useState } from "react";
+import DashboardLayout from "../../components/layout/DashboradLayout";
+import { getDashboardStats } from "../../api/adminService";
+import type { AdminDashboardDTO } from "../../components/types/admin";
+import DashboardStats from "../../components/dashboard/DashboardStats";
+import DashboardCharts from "../../components/dashboard/DashboardCharts";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState<AdminDashboardDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  const fetchDashboard = async () => {
+    try {
+      const response = await getDashboardStats();
+      setStats(response.data);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <DashboardLayout>
-      <h1 className="text-3xl font-bold mb-8 text-white">Admin Control Center</h1>
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <h1 className="text-3xl font-bold mb-10 text-white">Admin Analytics Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <StatCard title="TOTAL CUSTOMERS" value="1,248" />
-        <StatCard title="ACTIVE ACCOUNTS" value="3,402" />
-        <StatCard title="DAILY TRANSACTIONS" value="18,920" />
+        {loading && <p className="text-center text-gray-400 animate-pulse">Loading dashboard...</p>}
+        {error && <p className="text-center text-red-500 bg-red-500/10 p-3 rounded-lg">{error}</p>}
+
+        {stats && (
+          <>
+            <DashboardStats stats={stats} />
+            <DashboardCharts stats={stats} />
+          </>
+        )}
       </div>
     </DashboardLayout>
   );
 };
-
-const StatCard = ({ title, value }: { title: string; value: string }) => (
-  <div className="bg-[#0f172a]/80 backdrop-blur-md border border-[#15803d]/20 rounded-xl p-6 shadow-2xl transition-all hover:border-[#22c55e]/50 hover:shadow-[#22c55e]/20">
-    <p className="text-[#9ca3af] text-sm uppercase tracking-wider mb-2">{title}</p>
-    <p className="text-4xl font-extrabold text-[#22c55e] drop-shadow-lg">{value}</p>
-  </div>
-);
 
 export default AdminDashboard;

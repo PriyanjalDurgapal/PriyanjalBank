@@ -121,7 +121,6 @@ public CustomerProfileResponse getProfileByEmail(String email) {
             .dob(customer.getDob())
             .gender(customer.getGender())
             .address(customer.getAddress())
-            .accountNumber(customer.getAccountNumber())
             .status(customer.getStatus())
             .build();
 }

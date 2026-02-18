@@ -11,6 +11,7 @@ import com.bankingsystem.backend.admin.entity.Account;
 import com.bankingsystem.backend.admin.repository.AccountRepository;
 import com.bankingsystem.backend.atm.entity.AtmTransaction;
 import com.bankingsystem.backend.atm.enums.TransactionChannel;
+import com.bankingsystem.backend.atm.enums.TransactionType;
 import com.bankingsystem.backend.atm.repository.AtmTransactionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class TransactionService {
 
         AtmTransaction tx = AtmTransaction.builder()
                 .accountNumber(accountNumber)
-                .type("WITHDRAW")
+                .type(TransactionType.WITHDRAW)
                 .amount(amount)
                 .balanceAfter(account.getBalance())
                 .channel(channel)

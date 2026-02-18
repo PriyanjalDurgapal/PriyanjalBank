@@ -39,7 +39,7 @@ public class AtmOtp {
     @Column(nullable = false)
     private int attempts = 0;
 
-      @Column(name = "expiry_time", nullable = false)   // ✅ FIX
+      @Column(name = "expiry_time", nullable = false)   
     private LocalDateTime expiresAt;
 
     @Column(nullable = false)

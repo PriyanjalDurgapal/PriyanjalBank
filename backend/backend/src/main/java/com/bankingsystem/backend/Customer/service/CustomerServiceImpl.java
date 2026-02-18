@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -31,14 +33,17 @@ public class CustomerServiceImpl implements CustomerService {
     private final ArchivedCustomerRepository archivedCustomerRepository; 
     @Override
     public Customer createCustomer(CreateCustomerRequest request, String role) {
+            System.out.println("Received customer email from frontend: " + request.getEmail());
 
         if (customerRepository.existsByMobile(request.getMobile())) {
-            throw new RuntimeException("Mobile already exists");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Mobile already exists");
         }
+
+    
 
         if (request.getEmail() != null &&
             customerRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
         }
 
         String customerId = generateCustomerId();
@@ -54,7 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .email(request.getEmail())
                 .address(request.getAddress())
                 .createdByRole(role)
-                .accountNumber(accountNumber)
                 .password(passwordEncoder.encode(rawPassword))
                 .build();
 
@@ -94,7 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
 public Customer updateCustomer(Long id, UpdateCustomerRequest request, String performedBy) {
 
     Customer customer = customerRepository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
 
     customer.setFullName(request.getFullName());
     customer.setGender(request.getGender());
@@ -127,14 +131,13 @@ public Customer updateCustomer(Long id, UpdateCustomerRequest request, String pe
 @Override
 public Customer deleteCustomer(Long id, String performedBy) {
 
-    Customer customer = customerRepository.findByIdAndDeletedFalse(id)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-    //  Archive before delete
+    // 1️⃣ Find the customer
+    Customer customer = customerRepository.findById(id)
+             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+    // 2️⃣ Archive customer details
     ArchivedCustomer archive = ArchivedCustomer.builder()
             .originalCustomerId(customer.getId())
             .customerId(customer.getCustomerId())
-            .accountNumber(customer.getAccountNumber())
             .fullName(customer.getFullName())
             .gender(customer.getGender())
             .dob(customer.getDob())
@@ -148,29 +151,28 @@ public Customer deleteCustomer(Long id, String performedBy) {
 
     archivedCustomerRepository.save(archive);
 
-    //  Soft delete
-    customer.setDeleted(true);
-    customer.setDeletedBy(performedBy);
-    customer.setDeletedAt(LocalDateTime.now());
+    // 3️⃣ Hard delete the customer from the main table
+    customerRepository.delete(customer);
 
-    Customer saved = customerRepository.save(customer);
-
-    //  Email notification
+    //  Send email notification
     try {
-        if (saved.getEmail() != null) {
+        if (customer.getEmail() != null) {
             emailService.sendMail(
-                    saved.getEmail(),
+                    customer.getEmail(),
                     "Account Deactivated",
-                    "Dear " + saved.getFullName() +
+                    "Dear " + customer.getFullName() +
                             ",\n\nYour account has been deactivated.\n\nRegards,\nBank Team"
             );
         }
     } catch (Exception e) {
-        System.err.println("Email sending failed for customer: " + saved.getId());
+        System.err.println("Email sending failed for customer: " + customer.getId());
+        e.printStackTrace();
     }
 
-    return saved;
+    // Return archived customer info if needed
+    return customer;
 }
+
 @Override
 public Page<Customer> searchCustomers(
         String search,

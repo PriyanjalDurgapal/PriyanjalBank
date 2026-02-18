@@ -2,11 +2,11 @@ package com.bankingsystem.backend.admin.service;
 
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.bankingsystem.backend.admin.dto.AdminDashboardDTO;
 import com.bankingsystem.backend.admin.entity.Account;
 import com.bankingsystem.backend.admin.repository.AccountRepository;
 
@@ -36,6 +36,8 @@ public class AdminAccountService {
     public List<Account> list(Long customerId) {
         return repo.findByCustomerIdAndClosedFalse(customerId);
     }
+
+     
 
     public void freeze(Long id) {
         Account acc = repo.findById(id).orElseThrow();

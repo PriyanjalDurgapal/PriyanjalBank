@@ -8,12 +8,14 @@ import Popup from "../../components/ui/Popup";
 
 import { customerLogin } from "../../api/cutomersapi/customerAuth";
 import { useAuth } from "../../auth/AuthContext";
+import ForgotPasswordModal from "../../components/ui/ForgotPasswordModal";
 
 export default function CustomerLogin() {
   const [customerId, setCustomerId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [open ,setOpen]=useState(false);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -61,9 +63,15 @@ export default function CustomerLogin() {
                 <AuthInput placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <AuthButton text={loading ? "Logging in..." : "Login"} loading={loading} />
               </form>
+              <div className="text-right mb-6">
+      <button type="button" onClick={()=> setOpen(true)} className="text-sm text-green-600 hover:underline"> Forgot Password?</button>
+    </div>
             </div>
+            
           </div>
         </div>
+         <ForgotPasswordModal isOpen={open} onClose={()=>setOpen(false)}/>
+
       </div>
       {popup && <Popup message={popup.message} type={popup.type} onClose={() => setPopup(null)} />}
     </div>

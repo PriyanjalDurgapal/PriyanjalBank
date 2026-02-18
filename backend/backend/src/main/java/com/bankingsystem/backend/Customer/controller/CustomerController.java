@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/staff-customers")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')") //  ADMIN ONLY
+@PreAuthorize("hasAnyRole('ADMIN','STAFF')")
 public class CustomerController {
 
     private final CustomerService customerService;
